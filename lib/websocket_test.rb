@@ -4,7 +4,8 @@ module WebsocketTest
   module_function
 
   def init
-    @server = TCPServer.new('0.0.0.0', 8080)
+    @port   = ENV['GCP_RubyHost'].split(':').last.to_i
+    @server = TCPServer.new('0.0.0.0', @port)
     @running = false
   end
 
