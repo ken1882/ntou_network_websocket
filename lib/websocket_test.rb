@@ -4,7 +4,7 @@ module WebsocketTest
   module_function
 
   def init
-    @server = TCPServer.new('localhost', '8080')
+    @server = TCPServer.new('0.0.0.0', 8080)
     @running = false
   end
 
