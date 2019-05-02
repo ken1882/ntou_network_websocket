@@ -1,10 +1,18 @@
 #=============================================================================
-#
+# ** CodeCollection
+#----------------------------------------------------------------------------
+#   This class handles bulk distribution of an item and process codes whether
+# is correct.
 #=============================================================================
 class CodeCollection
   #--------------------------------------------------------------------------
-  attr_reader :instance, :title, :id
-  attr_reader :cloud_usage_file, :local_usage_path, :code_filename
+  attr_reader :instance               # Instance of the cloud folder
+  attr_reader :title, :id             # Title and id of the folders
+  attr_reader :cloud_usage_file       # Cloud file instance of usage data
+  attr_reader :local_usage_path       # Path to local usage data
+  attr_reader :code_filename          # Path to the valid code file
+  #--------------------------------------------------------------------------
+  # * Object initialization
   #--------------------------------------------------------------------------
   def initialize(instance)
     @instance = instance
@@ -14,9 +22,13 @@ class CodeCollection
     download_files
   end
   #--------------------------------------------------------------------------
+  # * Retrive n index of code whether used
+  #--------------------------------------------------------------------------
   def [](idx)
     return @usage_data[idx]
   end
+  #--------------------------------------------------------------------------
+  # * Download code and usage file from cloud
   #--------------------------------------------------------------------------
   def download_files
     path = DataManager::DataPath + @instance.title
@@ -28,6 +40,8 @@ class CodeCollection
     end
     load_code_usage(path)
   end
+  #--------------------------------------------------------------------------
+  # * Load code usage file to memory
   #--------------------------------------------------------------------------
   def load_code_usage(group_path)
     @local_usage_path = "#{group_path}/used.txt"
@@ -45,6 +59,8 @@ class CodeCollection
     end
   end
   #--------------------------------------------------------------------------
+  # * Check code valid and consume it
+  #--------------------------------------------------------------------------
   def process_code(code)
     re = check_code_exist(code)
     return 404 unless re
@@ -53,6 +69,8 @@ class CodeCollection
     update_cloud_file
     return 200
   end
+  #--------------------------------------------------------------------------
+  # * Check whether the code exist/used
   #--------------------------------------------------------------------------
   def check_code_exist(code)
     code = code.strip.upcase
@@ -66,10 +84,14 @@ class CodeCollection
     return false
   end
   #--------------------------------------------------------------------------
+  # * Mark index n code as used
+  #--------------------------------------------------------------------------
   def mark_used(idx)
     STDERR.puts("#{idx} used")
     @usage_data[idx] = true
   end
+  #--------------------------------------------------------------------------
+  # * Write usage data to file
   #--------------------------------------------------------------------------
   def update_local_file
     File.open(@local_usage_path, 'w') do |file|
@@ -78,6 +100,8 @@ class CodeCollection
       end
     end
   end
+  #--------------------------------------------------------------------------
+  # * Update usage data to cloud
   #--------------------------------------------------------------------------
   def update_cloud_file
     @cloud_usage_file.update_from_file(@local_usage_path)

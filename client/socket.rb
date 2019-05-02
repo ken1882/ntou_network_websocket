@@ -1,8 +1,11 @@
 require 'socket'
 
+# Load target server ip and port from ENV
 $ip, $port = ENV['GCP_RubyHost'].split(':')
 $ip = 'localhost' if ARGV.any?{|a| a == '-l'}
 
+
+# Send request to server
 def send_msg(code)
   s = TCPSocket.new($ip, $port)
   s.puts("GETGFT?#{code}")
@@ -10,11 +13,16 @@ def send_msg(code)
 end
 
 print("Enter your gift code: ")
-code = STDIN.gets.chomp
+code = STDIN.gets.chomp # retrive user input
 send_msg(code)
 
+
+# Valid code list
 %{
+  # ↓ prefix of code
   Ihpot
+
+  # ↓ random hash of code
   bead75fb05
   c8e0ea0ade
   4cb6af9303
