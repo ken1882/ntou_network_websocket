@@ -19,7 +19,7 @@ ruby clirent/socket.rb -l
 If successed, server will return 200; return 404 otherwise.
 
 ## Installation
-Clone this project, then set the enviroment variable correctly(or replace the ENV directly in the code):
+Clone this project and run `bundle install` (if you don't have corrsponding dependency), then set the enviroment variable correctly(or replace the ENV directly in the code):
 ```
 GCP_RubyHost=127.0.0.7:8080 // ip:port
 GCP_SAK=<your google drive service account key>
